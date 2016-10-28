@@ -6,9 +6,9 @@
   provider-name="JoKeRzBoX">
 	<extension point="xbmc.addon.repository" 
              name="JoKeRzBoX's LibreELEC extras S805">
-    <info compressed="false">http://raw.githubusercontent.com/JoKeRzBoX/JoKeRzBoX_LibreELEC_Repo_S805/master/addons.xml</info>
-    <checksum>http://raw.githubusercontent.com/JoKeRzBoX/JoKeRzBoX_LibreELEC_Repo_S805/master/addons.xml.md5</checksum>
-    <datadir zip="true">http://raw.githubusercontent.com/JoKeRzBoX/JoKeRzBoX_LibreELEC_Repo_S805/master/zips</datadir>
+    <info compressed="false">http://raw.githubusercontent.com/JoKeRzBoX/JoKeRzBoX_LibreELEC_Repo_s805/master/addons.xml</info>
+    <checksum>http://raw.githubusercontent.com/JoKeRzBoX/JoKeRzBoX_LibreELEC_Repo_s805/master/addons.xml.md5</checksum>
+    <datadir zip="true">http://raw.githubusercontent.com/JoKeRzBoX/JoKeRzBoX_LibreELEC_Repo_s805/master/zips</datadir>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<summary>JoKeRzBoX's LibreELEC compilations for S805 based devices</summary>
