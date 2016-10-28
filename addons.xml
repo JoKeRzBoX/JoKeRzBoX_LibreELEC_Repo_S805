@@ -17,7 +17,6 @@
 		<platform>all</platform>
 	</extension>
 </addon>
-
 <addon id="emulator.tools.retroarch"
        name="RetroArch"
        version="7.0.2-j01"
