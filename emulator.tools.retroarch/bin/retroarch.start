@@ -95,7 +95,15 @@ fi
 ### END of configuration changes
 
 
-if [ "$launch_method" -ne 0 ]; then
+if [ "$launch_method" -eq 0 ]; then
+        pgrep kodi.bin | xargs kill -SIGSTOP
+        if [ "$2" != "" ]; then
+                $ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE -L $ADDON_DIR/lib/libretro/$1_libretro.so "$2"
+        else
+                $ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE --menu
+        fi
+        pgrep kodi.bin | xargs kill -SIGCONT
+else
 	systemctl stop kodi
 	if [ "$2" != "" ]; then
 		echo "ha1" >> /tmp/ha
@@ -107,14 +115,6 @@ if [ "$launch_method" -ne 0 ]; then
 		$ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE --menu
 	fi
 	systemctl start kodi
-else
-	pgrep kodi.bin | xargs kill -SIGSTOP	
-	if [ "$2" != "" ]; then
-		$ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE -L $ADDON_DIR/lib/libretro/$1_libretro.so "$2"
-	else
-		$ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE --menu
-	fi
-	pgrep kodi.bin | xargs kill -SIGCONT	
 fi
 
 exit 0
