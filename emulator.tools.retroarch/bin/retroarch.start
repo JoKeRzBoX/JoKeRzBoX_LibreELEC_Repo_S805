@@ -62,48 +62,40 @@ if [ ! -d "$RETROARCH_SCREENSHOTS_DIR" ]; then
 	mkdir -p "$RETROARCH_SCREENSHOTS_DIR"
 fi
 
-sed -i "s:system_directory[ ]*=.*:system_directory = \"$RETROARCH_SYSTEM_DIR\":" "$RETROARCH_CONFIG_FILE" 
-sed -i "s:screenshot_directory[ ]*=.*:screenshot_directory = \"$RETROARCH_SCREENSHOTS_DIR\":" "$TMPFILE" 
+sed -i "s@system_directory[ ]*=.*@system_directory = \"$RETROARCH_SYSTEM_DIR\"@" "$RETROARCH_CONFIG_FILE" 
+sed -i "s@screenshot_directory[ ]*=.*@screenshot_directory = \"$RETROARCH_SCREENSHOTS_DIR\"@" "$RETROARCH_CONFIG_FILE"
 
 if [ "$retroarch_audio_out_rate" != "" ]; then
-	sed -i "s:audio_out_rate[ ]*=.*:audio_out_rate = \"$retroarch_audio_out_rate\":" "$RETROARCH_CONFIG_FILE"
+	sed -i "s@audio_out_rate[ ]*=.*@audio_out_rate = \"$retroarch_audio_out_rate\"@" "$RETROARCH_CONFIG_FILE"
 fi
 
 if [ "$retroarch_audio_driver" != "" ]; then
-        sed -i "s:audio_driver[ ]*=.*:audio_driver = \"$retroarch_audio_driver\":" "$RETROARCH_CONFIG_FILE"
+        sed -i "s@audio_driver[ ]*=.*@audio_driver = \"$retroarch_audio_driver\"@" "$RETROARCH_CONFIG_FILE"
 fi
 
 if [ "$retroarch_audio_device" != "" ]; then
-        sed -i "s:audio_device[ ]*=.*:audio_device = \"$retroarch_audio_device\":" "$RETROARCH_CONFIG_FILE"
+        sed -i "s@audio_device[ ]*=.*@audio_device = \"$retroarch_audio_device\"@" "$RETROARCH_CONFIG_FILE"
 fi
 
 if [ "$retroarch_video_threaded" != "" ]; then
-	sed -i "s:video_threaded[ ]*=.*:video_threaded = \"$retroarch_video_threaded\":" "$RETROARCH_CONFIG_FILE"
+	sed -i "s@video_threaded[ ]*=.*@video_threaded = \"$retroarch_video_threaded\"@" "$RETROARCH_CONFIG_FILE"
 fi
 
 if [ "$retroarch_menu_driver" != "" ]; then
-        sed -i "s:menu_driver[ ]*=.*:menu_driver = \"$retroarch_menu_driver\":" "$RETROARCH_CONFIG_FILE"
+        sed -i "s@menu_driver[ ]*=.*@menu_driver = \"$retroarch_menu_driver\"@" "$RETROARCH_CONFIG_FILE"
 fi
 
 if [ "$retroarch_rewind_enable" != "" ]; then
-	sed -i "s:rewind_enable[ ]*=.*:rewind_enable = \"$retroarch_rewind_enable\":" "$RETROARCH_CONFIG_FILE" 
+	sed -i "s@rewind_enable[ ]*=.*@rewind_enable = \"$retroarch_rewind_enable\"@" "$RETROARCH_CONFIG_FILE" 
 fi
 
 if [ "$retroarch_fps_show" != "" ]; then
-	sed -i "s:fps_show[ ]*=.*:fps_show = \"$retroarch_fps_show\":" "$RETROARCH_CONFIG_FILE" 
+	sed -i "s@fps_show[ ]*=.*@fps_show = \"$retroarch_fps_show\"@" "$RETROARCH_CONFIG_FILE" 
 fi
 ### END of configuration changes
 
 
-if [ "$launch_method" -eq 0 ]; then
-        pgrep kodi.bin | xargs kill -SIGSTOP
-        if [ "$2" != "" ]; then
-                $ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE -L $ADDON_DIR/lib/libretro/$1_libretro.so "$2"
-        else
-                $ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE --menu
-        fi
-        pgrep kodi.bin | xargs kill -SIGCONT
-else
+if [ "$launch_method" -ne 0 ]; then
 	systemctl stop kodi
 	if [ "$2" != "" ]; then
 		echo "ha1" >> /tmp/ha
@@ -115,6 +107,14 @@ else
 		$ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE --menu
 	fi
 	systemctl start kodi
+else
+	pgrep kodi.bin | xargs kill -SIGSTOP	
+	if [ "$2" != "" ]; then
+		$ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE -L $ADDON_DIR/lib/libretro/$1_libretro.so "$2"
+	else
+		$ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE --menu
+	fi
+	pgrep kodi.bin | xargs kill -SIGCONT	
 fi
 
 exit 0

@@ -1,4 +1,7 @@
 [B]Version 7.0.2-j03[/B]:
+- Fixed a bug in retroarch.start script
+
+[B]Version 7.0.2-j03[/B]:
 - Added more configuration params
 - Option to diable simple lancher (lanches RetroArch menu instead)
 
