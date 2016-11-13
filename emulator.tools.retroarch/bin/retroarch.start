@@ -26,6 +26,7 @@ RETROARCH_CONFIG_DIR="$ADDON_HOME/config"
 RETROARCH_CONFIG_FILE="$RETROARCH_CONFIG_DIR/retroarch.cfg"
 RETROARCH_SAVEFILES_DIR="$ADDON_HOME/savefiles"
 #RETROARCH_SYSTEM_DIR="$ADDON_HOME/system"
+LIBS32BIT_ADDON_DIR="$ADDON_DIR/../emulator.tools.32bitlibs"
 
 chmod a+x $ADDON_DIR/bin/*
 
@@ -94,25 +95,38 @@ if [ "$retroarch_fps_show" != "" ]; then
 fi
 ### END of configuration changes
 
+# Determine if this system has required library /lib/ld-linux-armhf.so.3, and use that to define what binary to use
+if [ -f "/lib/ld-linux-armhf.so.3" ]; then
+	RETROARCH_EXE="$ADDON_DIR/bin/retroarch"
+else
+	RETROARCH_EXE="$ADDON_DIR/bin/retroarch_mod"
+	# to make sure we are on bin folder when we start the modified retroarch_mod
+	cd "$ADDON_DIR/bin"
+fi
+
+if [ "$force_32bit_libs" == "true" ]; then
+	RETROARCH_EXE="$ADDON_DIR/bin/retroarch_mod"
+	LD_LIBRARY_PATH="$LIBS32BIT_ADDON_DIR/lib:$LD_LIBRARY_PATH"
+        # to make sure we are on bin folder when we start the modified retroarch_mod
+        cd "$ADDON_DIR/bin"
+else
+	LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$LIBS32BIT_ADDON_DIR/lib"
+fi
 
 if [ "$launch_method" -ne 0 ]; then
 	systemctl stop kodi
 	if [ "$2" != "" ]; then
-		echo "ha1" >> /tmp/ha
-		echo $ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE -L $ADDON_DIR/lib/libretro/$1_libretro.so "$2"  >> /tmp/ha
-		$ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE -L $ADDON_DIR/lib/libretro/$1_libretro.so "$2"
+		$RETROARCH_EXE -c $RETROARCH_CONFIG_FILE -L $ADDON_DIR/lib/libretro/$1_libretro.so "$2"
 	else
-		echo "ha2" >> /tmp/ha
-		echo  $ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE --menu >> /tmp/ha
-		$ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE --menu
+		$RETROARCH_EXE -c $RETROARCH_CONFIG_FILE --menu
 	fi
 	systemctl start kodi
 else
 	pgrep kodi.bin | xargs kill -SIGSTOP	
 	if [ "$2" != "" ]; then
-		$ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE -L $ADDON_DIR/lib/libretro/$1_libretro.so "$2"
+		$RETROARCH_EXE -c $RETROARCH_CONFIG_FILE -L $ADDON_DIR/lib/libretro/$1_libretro.so "$2"
 	else
-		$ADDON_DIR/bin/retroarch -c $RETROARCH_CONFIG_FILE --menu
+		$RETROARCH_EXE -c $RETROARCH_CONFIG_FILE --menu
 	fi
 	pgrep kodi.bin | xargs kill -SIGCONT	
 fi

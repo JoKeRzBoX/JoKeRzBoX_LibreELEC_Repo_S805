@@ -7,6 +7,12 @@
                 <setting  type="lsep" />
                 <setting label="Scripts Permissions (try only if RectroArch does not launch)" type="lsep" />
 		<setting label="Click to fix permissions of scripts to make them executable" type="action" action="RunScript($CWD/makeExecutable.py)" />
+
+		<setting  type="lsep" />
+		<setting label="Ignore OS libs and use ones from [B][I]32bit Libs for RetroArch[/I][/B] addon" type="lsep" />
+		<setting label="[I](requires addon to be installed before you can enable this setting)[/I]" type="lsep" visible="! System.HasAddon(emulator.tools.32bitlibs)" />
+		<setting id="force_32bit_libs" label="Forcefully use libraries from [B][I]32bit Libs for RetroArch[/I][/B] addon" type="bool" default="false" enable="System.HasAddon(emulator.tools.32bitlibs)" />
+
  	</category>
         <category label="Configuration">
 
